@@ -33,6 +33,7 @@ class CounterFitConnection:
     '''
     base_url = ''
 
+    # Hardcode authentication here
     @staticmethod
     def init(hostname: str = 'localhost', port: int = 5000) -> None:
         '''
@@ -114,3 +115,8 @@ class CounterFitConnection:
             return True
         except:
             return False
+        
+    # Authentication method
+    # username and password
+    # make all the set methods call this
+    # if all works then add token

@@ -489,7 +489,7 @@ def open_browser(port):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--port", metavar="port", type=int, default=5000, help="the port to run on"
+        "--port", metavar="port", type=int, default=5001, help="the port to run on"
     )
     parser.add_argument(
         "--dontopen",

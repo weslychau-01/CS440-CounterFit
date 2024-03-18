@@ -20,8 +20,8 @@ setup(
     description='Connection library for use with the CounterFit Virtual IoT Device app',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author='Jim Bennett',
-    url="https://github.com/CounterFit-IoT/CounterFit",
+    author='Jim Bennett, MEEE',
+    url="https://github.com/weslychau-01/CS440-CounterFit",
     license='MIT',
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",

@@ -35,7 +35,7 @@ class CounterFitConnection:
 
     # Hardcode authentication here
     @staticmethod
-    def init(hostname: str = 'localhost', port: int = 5000) -> None:
+    def init(hostname: str = 'localhost', port: int = 5001) -> None:
         '''
         Initializes the connection to the Virtual IoT Device running on the given url and port
         '''

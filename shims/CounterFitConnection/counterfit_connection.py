@@ -51,11 +51,11 @@ class CounterFitConnection:
         return float(response.json()['value'])
     
     @staticmethod
-    def get_sensor_int_value(port: int) -> int:
+    def get_sensor_int_value(port: int, sharedkey: int) -> int:
         '''
         Reads an integer value from the sensor on the given port
         '''
-        response = requests.get(CounterFitConnection.base_url + 'sensor_value?port=' + str(port))
+        response = requests.get(CounterFitConnection.base_url + 'sharedkey?port=' + str(port) + '&sharedkey=' + str(sharedkey))
         return int(response.json()['value'])
     
     @staticmethod

@@ -166,7 +166,9 @@ def create_actuator():
 def get_sensor_value():
     set_and_send_connected()
     port = str(request.args.get("port", ""))
-    if port.lower() in sensor_cache:
+    sharedkey = str(request.args.get("sharedkey", ""))
+    
+    if port.lower() in sensor_cache and sharedkey == 1231:
         sensor = sensor_cache[port.lower()]
 
         response = {"value": sensor.value}

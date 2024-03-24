@@ -18,6 +18,8 @@ from CounterFit.sensors import SensorBase, SensorType
 from CounterFit.serial_sensors import GPSSensor, GPSValueType, SerialSensorBase
 from CounterFit.binary_sensors import BinarySensorBase, CameraImageSource, CameraSensor
 from CounterFit.actuators import ActuatorBase
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "247783f3-bdda-4536-bffc-109e2464f10b"
@@ -30,6 +32,8 @@ all_sensors = []
 all_actuators = []
 
 is_connected = False
+sharedkey = b'Sf11SX7KTZg7UFSB'
+iv_in_bytes = b'Q1nulqHWhajpiKDe'
 
 
 def get_all_subclasses(cls, class_list):
@@ -166,16 +170,22 @@ def create_actuator():
 def get_sensor_value():
     set_and_send_connected()
     port = str(request.args.get("port", ""))
-    sharedkey = str(request.args.get("sharedkey", ""))
-    
-    if port.lower() in sensor_cache and sharedkey == "1231":
-        sensor = sensor_cache[port.lower()]
+    ciphertext = request.headers.get("Authorization")
 
+    ct = b64decode(ciphertext)
+    cipher = AES.new(sharedkey , AES.MODE_CBC, iv_in_bytes)
+    
+    pt = cipher.decrypt(ct)
+    unpt = unpad(pt, AES.block_size)
+
+
+    if unpt == b'sensor_value' and port.lower() in sensor_cache:
+        sensor = sensor_cache[port.lower()]
         response = {"value": sensor.value}
         print("Returning sensor value", response, "for port", port)
-
         return json.dumps(response)
-    response = {"value": "Invalid shared key :" + sharedkey}
+    
+    response = {"value": "Invalid request"}
     return json.dumps(response), 404
 
 

@@ -37,13 +37,14 @@ class GroveLightSensor:
     Args:
         pin(int): number of analog pin/channel the sensor connected.
     '''
-    def __init__(self, port: int, sharedkey: int):
+    def __init__(self, port: int, sharedkey: bytes, iv_in_bytes: bytes):
         self.__port = port
         self.__sharedkey = sharedkey
+        self.__iv_in_bytes = iv_in_bytes
 
     @property
     def light(self) -> int:
         '''
         Get the light strength value, maximum value is 1023
         '''
-        return CounterFitConnection.get_sensor_int_value(self.__port, self.__sharedkey)
+        return CounterFitConnection.get_sensor_int_value(self.__port, self.__sharedkey, self.__iv_in_bytes)

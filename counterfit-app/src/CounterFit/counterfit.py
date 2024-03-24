@@ -168,15 +168,15 @@ def get_sensor_value():
     port = str(request.args.get("port", ""))
     sharedkey = str(request.args.get("sharedkey", ""))
     
-    if port.lower() in sensor_cache and sharedkey == 1231:
+    if port.lower() in sensor_cache and sharedkey == "1231":
         sensor = sensor_cache[port.lower()]
 
         response = {"value": sensor.value}
         print("Returning sensor value", response, "for port", port)
 
         return json.dumps(response)
-
-    return "Sensor with port " + str(port) + " not found", 404
+    response = {"value": "Invalid shared key :" + sharedkey}
+    return json.dumps(response), 404
 
 
 @app.route("/serial_sensor_character", methods=["GET"])

@@ -22,12 +22,9 @@ Examples:
 '''
 # pylint: disable=duplicate-code,bare-except
 
-from base64 import b64decode, b64encode
+from base64 import b64decode
 import io
 import requests
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad
-
 
 class CounterFitConnection:
     '''
@@ -54,20 +51,12 @@ class CounterFitConnection:
         return float(response.json()['value'])
     
     @staticmethod
-    def get_sensor_int_value(port: int, sharedkey: bytes, iv_in_bytes: bytes) -> int:
+    def get_sensor_int_value(port: int, sharedkey: int) -> int:
         '''
         Reads an integer value from the sensor on the given port
         '''
-        data = b"sensor_value"
-        cipher = AES.new(sharedkey, AES.MODE_CBC, iv_in_bytes)
-        ct_bytes = cipher.encrypt(pad(data, AES.block_size))
-        ct = b64encode(ct_bytes).decode('utf-8')
-        headers = {
-            'Authorization': ct
-            }
-        response = requests.get(CounterFitConnection.base_url + 'sensor_value?port=' + str(port), headers=headers)
+        response = requests.get(CounterFitConnection.base_url + 'sensor_value?port=' + str(port) + '&sharedkey=' + str(sharedkey))
         return int(response.json()['value'])
-
 
     @staticmethod
     def get_sensor_boolean_value(port: int) -> bool:

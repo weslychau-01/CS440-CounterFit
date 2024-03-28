@@ -168,25 +168,32 @@ def create_actuator():
 
 @app.route("/sensor_value", methods=["GET"])
 def get_sensor_value():
-    set_and_send_connected()
-    port = str(request.args.get("port", ""))
-    ciphertext = request.headers.get("Authorization")
+    try:
+        
+        set_and_send_connected()
+        port = str(request.args.get("port", ""))
+        ciphertext = request.headers.get("Authorization")
 
-    ct = b64decode(ciphertext)
-    cipher = AES.new(sharedkey , AES.MODE_CBC, iv_in_bytes)
-    
-    pt = cipher.decrypt(ct)
-    unpt = unpad(pt, AES.block_size)
+        ct = b64decode(ciphertext)
+        cipherEngine = AES.new(sharedkey , AES.MODE_CBC, iv_in_bytes)
+        paddedpt = cipherEngine.decrypt(ct)
+        pt = unpad(paddedpt, AES.block_size)
 
 
-    if unpt == b'sensor_value' and port.lower() in sensor_cache:
-        sensor = sensor_cache[port.lower()]
-        response = {"value": sensor.value}
+        if pt == b'plainText' and port.lower() in sensor_cache:
+            sensor = sensor_cache[port.lower()]
+            response = {"value": sensor.value}
+            print("Returning sensor value", response, "for port", port)
+            return json.dumps(response)
+        
+        response = {"value": -1}
         print("Returning sensor value", response, "for port", port)
         return json.dumps(response)
     
-    response = {"value": "Invalid request"}
-    return json.dumps(response), 404
+    except Exception as e:    
+        response = {"value": -1}
+        print("Returning sensor value", response, "for port", port)
+        return json.dumps(response)
 
 
 @app.route("/serial_sensor_character", methods=["GET"])

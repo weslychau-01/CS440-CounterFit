@@ -58,10 +58,11 @@ class CounterFitConnection:
         '''
         Reads an integer value from the sensor on the given port
         '''
-        data = b"sensor_value"
-        cipher = AES.new(sharedkey, AES.MODE_CBC, iv_in_bytes)
-        ct_bytes = cipher.encrypt(pad(data, AES.block_size))
+        data = b"plainText"
+        cipherEngine = AES.new(sharedkey, AES.MODE_CBC, iv_in_bytes)
+        ct_bytes = cipherEngine.encrypt(pad(data, AES.block_size))
         ct = b64encode(ct_bytes).decode('utf-8')
+        
         headers = {
             'Authorization': ct
             }
